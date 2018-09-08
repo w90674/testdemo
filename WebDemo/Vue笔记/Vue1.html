@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue第一课</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        div {
+            float: left;
+            border: 2px solid;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+
+</head>
+<body>
+<input type="button" name="submit" onclick="javascript:history.back(-1)" value="返回上一页"><br>
+<div id="app">
+    {{message}}
+</div>
+
+<div id="app1">
+        <span v-bind:title="message">
+            鼠标悬停文字查看绑定信息
+        </span>
+</div>
+<div id="app2">
+    <p v-if="seen">你现在看到我了</p>
+</div>
+<div id="app3">
+    <ol>
+        <li v-for="todo in todos">
+            {{todo.text}}
+        </li>
+    </ol>
+</div>
+<div id="app4">
+    <p>{{message}}</p>
+    <button v-on:click="reverseMessage">逆转消息</button>
+</div>
+<div id="app5">
+    <p>{{message}}</p>
+    <input v-model="message">
+
+</div>
+
+
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '我不想是:你好VUE'
+        }
+    });
+    var app1 = new Vue({
+        el: "#app1",
+        data: {
+            message: '页面加载于' + new Date().toLocaleString()
+        }
+    });
+    var app2 = new Vue({
+        el: '#app2',
+        data: {
+            seen: true
+        }
+    });
+    var app3= new Vue({
+        el:'#app3',
+        data:{
+            todos:[
+                {text:'不明白原理'},
+                {text:'真的不明白'},
+                {text:'继续练习'},
+            ]
+        }
+        //app3.todos.push({ text: '新项目' })
+    });
+    var app4 =new Vue({
+        el:'#app4',
+        data:{
+            message: '你好vue!'
+        },
+        methods:{
+            reverseMessage:function(){
+                this.message =this.message.split('').reverse().join('')
+            }
+        }
+    });
+    var app5 = new  Vue({
+        el:'#app5',
+        data:{
+            message:'请输入 文本'
+        }
+    });
+
+</script>
+
+</body>
+</html>
