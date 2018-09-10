@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+[cloak]{
+  display: none;
+}
+.bkdiv {
+  height: 100%;
+  width: 100%;
+}
+
+.divbody {
+  width: 80%;
+  height: 450px;
+  float: left;
+  margin-left: 10%;
+  user-select: none;
+}
+
+.head {
+  width: 100%;
+  height: 100px;
+  background-color: #1e578f;
+  user-select: none;
+}
+
+.headtx {
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 5px;
+  float: right;
+  margin-right: 50px;
+  margin-top: -50px;
+  border-radius: 50%;
+  border: solid #2c2c2c 2px;
+}
+
+.headtx img {
+  width: 100%;
+  height: 100%;
+}
+
+.tcdiv {
+  position: fixed;
+  z-index: 1002;
+  width: 30%;
+  height: 70%;
+  top: 20%;
+  left: 30%;
+  background-color: white;
+  border: none;
+}
+
+.black_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: 1001;
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+  filter: alpha(opacity=88);
+}
+
+
+.htitle {
+  font-size: 30px;
+  color: #fff;
+  padding-left: 40px;
+  padding-top: 20px;
+}
+
+.dhdiv {
+  background-color: blue;
+  width: 200px;
+  height: 200px;
+}
+
+.table td, .table th {
+  padding: 0.5rem
+}

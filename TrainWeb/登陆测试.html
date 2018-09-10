@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登陆</title>
+
+</head>
+
+<body>
+    <div class="bodydiv">
+        账号:<input type="text" placeholder="请输入账号" id="username"><p id="zhzz" style="display: none">4到16位（字母，数字，下划线，减号</p>
+        <br> 密码:
+        <input type="password" placeholder="请输入密码" id="password"><br>
+        <button type="button" onclick="tijiao()">登陆</button>
+    </div>
+    <!-- 引用jquery -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        //var cg = new Array();
+        function tijiao() {
+            var name = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            // 账号正则
+            var Pattern = /^[a-zA-Z0-9_-]{4,16}$/;
+
+            console.log(name, password);
+            if (name.length == "") {
+                alert("账号不能为空")
+            }
+            if (password.length == "") {
+                alert("密码不能为空")
+            } if (Pattern.test(name) == false) {
+                $("#zhzz").css("display", "block")
+            }
+            else {
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:9090/Mlogin",
+                    dataType: "json",
+                    // async: true,
+                    data: {
+                        userName: name,
+                        passWord: password
+                    },
+                    success: function (response) {
+                        var cg = response.data;
+                        if (cg) {
+                            if (cg.pk_IDENTITY == '1') {
+                                window.location.href = `Dredordlist.html?name=${cg.user_NAME}`;
+                            } if (cg.pk_IDENTITY == '2') {
+                                window.location.href = "#";
+                            } if (cg.pk_IDENTITY == '3') {
+                                window.location.href = "#";
+                            }
+                        } else {
+                            alert("账号或密码错误")
+                        }
+                        console.log("成功数据：", cg);
+                    },
+                    error: function () {
+                        alert("服务器繁忙")
+                    }
+                });
+
+            }
+
+        }
+    </script>
+</body>
+
+</html>

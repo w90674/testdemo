@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>管理人员档案列表页面</title>
+    <!--引入bootstrap-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <!--自定义css样式-->
+    <link rel="stylesheet" href="css/DredordlistCss.css">
+</head>
+
+<body>
+<!-- vue axios -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js "></script>
+
+<template id="model" type="text/x-template">
+    <!-- 弹出div(增加功能) -->
+    <div class="model" v-show="visible">
+        <div  class="tcdiv">
+            昵称：<input type="text" v-model="form.RECORD_NAME"><br>
+            角色：<input type="text" v-model="form.RECORD_ROLE"><br>
+            联系方式：<input type="text" v-model="form.RECORD_TELEPHONE"><br>
+            备注：<input type="text" v-model="form.RECORD_REMARKS"><br>
+            <div class="btn-group">
+                <button type="button" class="btn btn-dark" @click="handleSubmit">提交</button>
+                <button type="button" class="btn btn-dark" @click="handleCancel">取消</button>
+            </div>
+        </div>
+        <div  class="black_overlay "></div>
+    </div>
+</template>
+<div class="bkdiv" v-cloak>
+    <div class="head">
+        <div class="htitle">
+            田径训练管理平台
+        </div>
+        <div class="headtx">
+            <img src="img/登陆.png">
+        </div>
+    </div>
+    <!-- 显示内容 -->
+    <div class="divbody" id="myView">
+        <table class="table">
+            <thead class="table table-striped thead-dark">
+            <tr>
+                <th scope="col">昵称</th>
+                <th scope="col">角色</th>
+                <th scope="col">联系方式</th>
+                <th scope="col">备注</th>
+                <th scope="col">删除</th>
+                <th scope="col">修改</th>
+                <th>
+                    <button type="button" class="btn btn-dark">增加</button>
+                </th>
+            </tr>
+            </thead>
+            <tr v-for="user in userList">
+                <!-- userList为后台保存在请求中的值 -->
+                <td>{{user.record_NAME}}</td>
+                <td>{{user.record_ROLE}}</td>
+                <td>{{user.record_TELEPHONE}}</td>
+                <td>{{user.record_REMARKS}}</td>
+                <td>
+                    <button type="button" class="btn btn-dark" @click="removeUser(user.pk_RECORD)">删除</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-dark" @click="xgbutton(user)">修改</button>
+                </td>
+            </tr>
+        </table>
+        <model :form="form" :visible.sync="show" @updateData="getData"></model>
+    </div>
+</div>
+<!-- 引用jqeury -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<script type="text/JavaScript " async>
+    Vue.component('model',{
+        template:'#model',
+        props:['form','visible'],
+        methods:{
+            handleSubmit() {
+                console.log(this.form);
+                 $.ajax({
+                 url: "http://localhost:9090/DRupdate",
+                 type: "post",
+                 data: this.form,
+                 success: () =>{
+                    this.$emit('updateData')
+                 },
+                 error: function () {
+                 alert("修改失败");
+                 }
+                 });
+                this.$emit('update:show',false)
+            },
+            handleCancel() {
+                // 取消弹框
+                this.$emit('update:visible',false)
+            }
+        }
+    })
+    new Vue({
+            el: "#myView", data: function () {
+                return {
+                    userList: [],
+                    show: false,
+                    form: {
+                        RECORD_NAME: '', //昵称
+                        RECORD_ROLE: '',//角色
+                        RECORD_TELEPHONE: '',//联系方式
+                        RECORD_REMARKS: '', //备注
+                        PK_RECORD: '', //ID
+                    }
+                }
+            },
+            created() {
+                this.getData()
+            },
+            methods: {
+                getData: function () {
+                    $.ajax({
+                        url: 'http://localhost:9090/DRshowlist',
+                        type: 'get',
+                        timeout: 3000,
+                        success: result => {
+                            this.userList = result
+                        },
+                        error: function () {
+                            alert("服务器繁忙 ");
+                        }
+                    })
+                },
+                removeUser: function (id) {
+                     $.ajax({
+                     url: 'http://localhost:9090/DRdelete',
+                     type: 'post',
+                     data: {PK_RECORD: id},
+                     timeout: 3000, success: (result) => { // console.log(result);
+                     this.userList = this.userList.filter(item => item.pk_RECORD !== id)
+                     }, error: function (err) {
+                     alert("服务器繁忙 ") //console.log(err)
+                     }
+                     })
+                },
+                // 弹出表单
+                xgbutton: function (val) {
+                    this.form.RECORD_NAME = val.record_NAME;
+                    this.form.RECORD_ROLE = val.record_ROLE;
+                    this.form.RECORD_TELEPHONE = val.record_TELEPHONE;
+                    this.form.RECORD_REMARKS = val.record_REMARKS;
+                    this.form.PK_RECORD = val.pk_RECORD;
+                    //显示弹框
+                    this.show = true
+                },
+            }
+        }
+    )
+</script>
+
+<!-- bootstrap -->
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js " integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous "></script>
+<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js " integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous "></script>
+</body>
+
+</html>
